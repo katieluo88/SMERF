@@ -2,9 +2,10 @@
 body {
   background: #e3e5e8;
   color: #ffffff;
-  font-family: 'Lato', Verdana, Helvetica, sans-serif;
+  font-family: "Source Sans Pro",Calibri,Candara,Arial,sans-serif;
+  /* font-family: 'Lato', Verdana, Helvetica, sans-serif; */
   font-weight: 300;
-  font-size: 14pt;
+  font-size: 12pt;
 }
 
 /* Hyperlinks */
@@ -18,7 +19,7 @@ a:hover {color: #f09228;}
 pre {
   margin: 5pt 0;
   border: 0;
-  font-size: 12pt;
+  font-size: 10pt;
   background: #fcfcfc;
 }
 
@@ -59,21 +60,21 @@ pre {
 .section .author {
   margin: 10pt 0;
   text-align: center;
-  font-size: 14pt;
+  font-size: 12pt;
 }
 
 /* Institution */
 .section .institution {
   margin: 10pt 0;
   text-align: center;
-  font-size: 14pt;
+  font-size: 12pt;
 }
 
 /* Hyperlink (such as Paper and Code) */
 .section .link {
   margin: 5pt 0;
   text-align: center;
-  font-size: 16pt;
+  font-size: 14pt;
 }
 
 /* Teaser */
@@ -88,7 +89,7 @@ pre {
 /* Section Title */
 .section .title {
   text-align: center;
-  font-size: 22pt;
+  font-size: 18pt;
   margin: 5pt 0 15pt 0;  /* top right bottom left */
 }
 
@@ -96,21 +97,21 @@ pre {
 .section .body {
   margin-bottom: 15pt;
   text-align: justify;
-  font-size: 14pt;
+  font-size: 12pt;
 }
 
 /* BibTeX */
 .section .bibtex {
   margin: 5pt 0;
   text-align: left;
-  font-size: 22pt;
+  font-size: 14pt;
 }
 
 /* Related Work */
 .section .ref {
   margin: 20pt 0 10pt 0;  /* top right bottom left */
   text-align: left;
-  font-size: 18pt;
+  font-size: 12pt;
   font-weight: bold;
 }
 
@@ -131,5 +132,5 @@ pre {
 .section .citation .comment{
   margin-left: 130pt;
   text-align: left;
-  font-size: 14pt;
+  font-size: 12pt;
 }
