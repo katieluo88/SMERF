@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en">
+
+<!-- === Header Starts === -->
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>VectorMapNet</title>
+
+    <link href="./assets/bootstrap.min.css" rel="stylesheet">
+    <link href="./assets/font.css" rel="stylesheet" type="text/css">
+    <link href="./assets/style.css" rel="stylesheet" type="text/css">
+    <script src="./assets/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/corpus.js"></script>
+    <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+</head>
+<!-- === Header Ends === -->
+
+<script>
+    var lang_flag = 1;
+</script>
+
+<body>
+
+<!-- === Home Section Starts === -->
+<div class="section">
+    <!-- === Title Starts === -->
+
+    <div class="logo" align="center">
+        <!-- <a href="" target="_blank"> -->
+            <img style=" width: 400pt;" src="images/vectormapnet_logo.png">
+        <!-- </a> -->
+    </div>
+
+    <div class="header">
+        <div style="margin-bottom: -10pt" class="title" id="lang">
+            <b>VectorMapNet</b>: End-to-end Vectorized HD Map Learning
+        </div>
+        
+    </div>
+    <div style="margin-top: -30pt" class="author" id="lang", align="center">
+        <b>ICML 2023</b>
+    </div>
+    <!-- === Title Ends === -->
+
+    <!-- <div class="author" style="margin-top: -30pt"> -->
+    <div class="author" style="">
+        <a href="https://scholar.google.com/citations?user=vRmsgQUAAAAJ&hl=zh-CN" target="_blank">Yicheng Liu</a><sup>1,2</sup>,&nbsp;
+        <a href="https://tsinghua-mars-lab.github.io/vectormapnet/" target="_blank">Tianyuan Yuan</a><sup>2</sup>,&nbsp;
+        <a href="https://people.csail.mit.edu/yuewang/" target="_blank">Yue Wang</a><sup>3</sup>,&nbsp;
+        <a href="https://scholar.google.com.hk/citations?hl=en&user=nUyTDosAAAAJ">Yilun Wang</a><sup>4</sup>,&nbsp;
+        <a href="https://hangzhaomit.github.io/">Hang Zhao</a><sup>1,2</sup>&nbsp;
+    </div>
+
+    <div class="institution">
+        <div>
+            <sup>1</sup>Shanghai Qizhi Institute,
+            <sup>2</sup>Tsinghua University,
+            <sup>3</sup>MIT,
+            <sup>4</sup>Li Auto
+        </div>
+    </div>
+
+    <table border="0" align="center">
+        <tr>
+            <td align="center" style="padding: 0pt 0 15pt 0">
+                <a class="bar" href="https://tsinghua-mars-lab.github.io/vectormapnet/"><b>Webpage</b></a> |
+                <a class="bar" href="https://github.com/Mrmoore98/VectorMapNet_code"><b>Code</b></a> |
+                <a class="bar" href="https://arxiv.org/pdf/2206.08920.pdf"><b>Paper</b></a>
+            </td>
+        </tr>
+    </table>
+    
+    <!--<div align="center">
+        <table width="100%" style="margin: 0pt 0pt; text-align: center;">
+            <tr>
+                <td>
+                    <video style="display:block; width:100%; height:auto; "
+                           autoplay="autoplay" muted loop="loop" controls playsinline>
+                        <source src="https://raw.githubusercontent.com/decisionforce/archive/master/MetaDrive/metadrive_teaser.mp4"
+                                type="video/mp4"/>
+                    </video>
+                </td>
+            </tr>
+        </table>
+    </div> -->
+    <p>
+        An end-to-end map learning framework that generates vectorized HD map from onboard sensor data.
+        To the best of our knowledge, VectorMapNet is the first work designed towards end-to-end vectorized HD map learning problems.
+        <!-- MUTR3D handles multi-camera 3D detection, and cross-camera, cross-frame objects association in an end-to-end fashion. -->
+    </p>
+    
+</div>
+<!-- === Home Section Ends === -->
+
+<div class="section">
+    <div class="title" id="lang">Motivation</div>
+    <div class="logo" style="" align="center">
+        <img style="width: 700pt;" src="images/teaser_vmp.png">
+    </div>
+    <p>
+        Most recent HD map learning methods use dense primitives (e.g., pixels) to model maps. But learning these dense primitives complicates the pipeline and restricts the model's scalability and performance. In VectorMapNet, we represent map elements as a set of polylines that are easily linked to downstream tasks (e.g., motion forecasting), and model these polylines with a set prediction framework. The overview of our idea is presented in the Figure above. 
+    </p>
+
+
+</div>
+
+<div class="section">
+    <div class="title" id="lang">Method</div>
+
+    <p>
+        Our task is to model map elements in the urban environments in a vectorized form using data from onboard sensors, e.g., RGB cameras and/or LiDARs. These map elements include but are not limited to road boundaries, lane dividers, and pedestrian crossings, which are critical for autonomous driving.
+    </p>
+
+    <figure>
+        <!-- <img style="width: 700pt;" src="images/overview_vmp.png"> -->
+        <img style="width: 700pt;" src="images/VectorMapNet_Pipelinex2.gif">
+    </figure>
+    <p>
+        There are three key ingredients in our vectorized HD map generation pipeline, as shown in above figure.
+    </p>
+    <ul>
+        <li>
+            A <b>BEV feature extractor</b> that map sensor data from sensor-view to a canonical BEV representation\(\mathcal{F}_{\mathrm{BEV}}\).
+        </li> 
+        <li>
+            A scene-level <b>map element detector</b> that locates and classifies all map elements by predicting element keypoints \( \mathcal{A}=\{a_i\in\mathbb{R}^{k\times 2}|i=1,\dots,N\} \) and their class labels \( \mathcal{L} = \{l_i\in\mathbb{Z}|i=1,\dots,N\} \).
+        </li>
+        <li>
+            An object-level <b>polyline generator</b> that produces a polyline vertices sequence for each detected map element \((a_i, l_i)\).
+        </li>  
+    </ul>
+    
+</div>
+
+<div class="section">
+    <div class="title" id="lang">Qualitative Results</div>
+    <div class="logo" style="" align="center">
+        <img style="width: 700pt;" src="images/qualitative_hdmapnet.png">
+    </div>
+    <p>
+        Qualitative results generated by VectorMapNet and baselines. We use camera images as inputs for comparisons. The areas enclosed by <font COLOR="#FF0000">red</font> and <font COLOR="#0000FF">blue</font> ellipses show that VectorMapNet can preserve sharp corners, and polyline representations prevent VectorMapNet from generating ambiguous self-looping results.
+    </p>
+    <div class="logo" style="" align="center">
+        <img style="width: 700pt;" src="images/qualitative_example.png">
+    </div>
+    <p>
+        An example of VectorMapNet detecting unlabeled map elements. The <font COLOR="#FF0000">red ellipse</font> indicates a pedestrian crossing that is missing in ground truth annotations, while VectorMapNet detects it correctly. All the predictions are generated from camera images.
+    </p>
+</div>
+
+
+
+<div class="section">
+    <div class="title" id="lang">Related Projects on <a href="https://vcad-ai.github.io/">VCAD (Vision-Centric Autonomous Driving)</a></div>
+    <div class="col text-center">
+
+    <table width="100%" style="margin: 0pt 0pt; text-align: center;">
+    <tr>
+      <td>
+      BEV Mapping<br>
+      <a href="https://tsinghua-mars-lab.github.io/HDMapNet/" class="d-inline-block p-3"><img height="100"
+          src="images/hdmapnet_thumbnail.gif" style="border:1px solid" data-nothumb><br>HDMapNet</a>
+      </td>
+
+      <td>
+      BEV Detection<br>
+        <a href="https://tsinghua-mars-lab.github.io/detr3d/" class="d-inline-block p-3"><img height="100"
+          src="images/detr3d_thumbnail.png" style="border:1px solid"
+          data-nothumb><br>DETR3D</a>
+      </td>
+
+      <td>
+      BEV Fusion<br>
+        <a href="https://tsinghua-mars-lab.github.io/futr3d/" class="d-inline-block p-3"><img height="100"
+          src="images/futr3d_thumbnail.png" style="border:1px solid"
+          data-nothumb><br>FUTR3D</a>
+      </td>
+
+      <td>
+        BEV Tracking<br>
+      <a href="https://tsinghua-mars-lab.github.io/mutr3d/" class="d-inline-block p-3"><img height="100"
+          src="images/mutr3d_thumbnail.png" style="border:1px solid"
+          data-nothumb><br>MUTR3D</a>
+      </td>
+
+    </tr>
+
+    </table>
+    </div>
+
+    
+</div>
+
+<!-- === Reference Section Starts === -->
+<div class="section">
+    <div class="bibtex">
+       <div class="title" id="lang">Reference</div>
+    </div>
+<p>If you find our work useful in your research, please cite our paper:</p>
+<pre>
+    @inproceedings{liu2022vectormapnet,
+        title={VectorMapNet: End-to-end Vectorized HD Map Learning},
+        author={Liu, Yicheng and Yuan, Tianyuan and Wang, Yue and Wang, Yilun and Zhao, Hang},
+        booktitle={International conference on machine learning},
+        year={2023},
+        organization={PMLR}
+    }
+</pre>
+    <!-- Adjust the frame size based on the demo (Every project differs). -->
+</div>
+
+</body>
+</html>
