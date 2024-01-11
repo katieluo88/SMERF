@@ -71,7 +71,8 @@
         <tr>
             <td align="center" style="padding: 0pt 0 15pt 0">
                 <a class="bar" href="https://github.com/NVlabs/SMERF"><b>Code</b></a> |
-                <a class="bar" href="https://arxiv.org/abs/2311.04079v1"><b>Paper</b></a>
+                <a class="bar" href="https://arxiv.org/abs/2311.04079v1"><b>Paper</b></a> |
+                <a class="bar" href="https://youtu.be/hGt58oiMIDw"><b>Video</b></a>
             </td>
         </tr>
     </table>
@@ -90,7 +91,7 @@
         </table>
     </div> -->
     <p>
-        We introduce a novel framework that leverages Standard Definition (SD) maps for real-time lane topology prediction in autonomous driving. By integrating SD maps into online map prediction with our Transformer-based embedding, we've significantly improved lane detection and topology prediction by up to 60%, marking a substantial advancement in this field. To the best of our knowledge, SMERF (SD Map Encoder Representations from transFormers) is the first work to leverage SD maps for map prediction.
+        In order for self-driving to plan safe routes, they need to understand the topology of the road. In this work, we tackle the lane-topology task, which aims to predict lane centerlines and relationships between each other and traffic elements. We introduce a novel framework that leverages Standard Definition (SD) maps for real-time lane topology prediction in autonomous driving. By integrating SD maps into online map prediction with our Transformer-based embedding, we've significantly improved lane detection and topology prediction by up to 60%, marking a substantial advancement in this field. To the best of our knowledge, SMERF (SD Map Encoder Representations from transFormers) is the first work to leverage SD maps for map prediction.
         <!-- MUTR3D handles multi-camera 3D detection, and cross-camera, cross-frame objects association in an end-to-end fashion. -->
     </p>
     
@@ -98,42 +99,43 @@
 <!-- === Home Section Ends === -->
 
 <div class="section">
-    <div class="title" id="lang">This project page is still in progress. Thank you for your patience!</div>
-    <!-- <div class="title" id="lang">Motivation</div>
+    <!-- <div class="title" id="lang">This project page is still in progress. Thank you for your patience!</div> -->
+    <div class="title" id="lang">Motivation</div>
     <div class="logo" style="" align="center">
-        <img style="width: 700pt;" src="images/teaser_vmp.png">
+        <img style="width: 500pt;" src="images/teaser-web.png">
     </div>
-    <p>
-        Most recent HD map learning methods use dense primitives (e.g., pixels) to model maps. But learning these dense primitives complicates the pipeline and restricts the model's scalability and performance. In VectorMapNet, we represent map elements as a set of polylines that are easily linked to downstream tasks (e.g., motion forecasting), and model these polylines with a set prediction framework. The overview of our idea is presented in the Figure above. 
-    </p> -->
+
+    <p style="padding-top: 30px;">
+        SD maps include crucial information for road topology which can complement onboard cameras for lane-topology reasoning. For example, intersections that are not visible in the camera images due to occlusion can be seen in an SD map instead. In the SD map, <span style="color:orange;">orange</span> lines represent roads and <span style="color:teal">teal</span> lines represent walkways.
+    </p>
 
 
 </div>
 
-<!-- === Editing ends here === -->
 
-<!-- <div class="section">
+
+<div class="section">
     <div class="title" id="lang">Method</div>
 
     <p>
-        Our task is to model map elements in the urban environments in a vectorized form using data from onboard sensors, e.g., RGB cameras and/or LiDARs. These map elements include but are not limited to road boundaries, lane dividers, and pedestrian crossings, which are critical for autonomous driving.
+        Our task is to detect the lane centerlines of the road and the traffic elements of the scene such as the traffic lights and stop signs, as well as infer the connectivity of the lane centerlines and how they relate to each traffic element. In contrast with prior work, we additionally assume that we have access to the SD map of the region, queried using an onboard GPS system.
     </p>
 
     <figure>
-        <img style="width: 700pt;" src="images/VectorMapNet_Pipelinex2.gif">
+        <img style="width: 700pt;" src="images/model-fig-web.gif">
     </figure>
     <p>
-        There are three key ingredients in our vectorized HD map generation pipeline, as shown in above figure.
+        The proposed SMERF (lower half) augments an existing lane-topology model (upper half) with priors from SD maps in order to better detect lane centerlines and relational reasoning. There are three key components, as shown in above figure.
     </p>
     <ul>
         <li>
-            A <b>BEV feature extractor</b> that map sensor data from sensor-view to a canonical BEV representation\(\mathcal{F}_{\mathrm{BEV}}\).
+            <b>SD Map inputs</b>, containing road-level topology and type-of-road information, are extracted. The map segments are transformed into \( M \) polylines relative to the ego vehicle's coordinates.
         </li> 
         <li>
-            A scene-level <b>map element detector</b> that locates and classifies all map elements by predicting element keypoints \( \mathcal{A}=\{a_i\in\mathbb{R}^{k\times 2}|i=1,\dots,N\} \) and their class labels \( \mathcal{L} = \{l_i\in\mathbb{Z}|i=1,\dots,N\} \).
+            Sinusoidal embeddings encode the polyline point locations, which is then passed to a <b>Transformer encoder</b> to extract the global geometric and semantic information from the SD map input.
         </li>
         <li>
-            An object-level <b>polyline generator</b> that produces a polyline vertices sequence for each detected map element \((a_i, l_i)\).
+            The SD map representation lastly fuses with the intermediate <b>lane-topology model</b> using multi-head cross-attention.
         </li>  
     </ul>
     
@@ -142,20 +144,28 @@
 <div class="section">
     <div class="title" id="lang">Qualitative Results</div>
     <div class="logo" style="" align="center">
-        <img style="width: 700pt;" src="images/qualitative_hdmapnet.png">
+        <video id="v0" width="100%" autoplay loop muted
+            style="display: block; margin: 0 auto;">
+            <source src="images/baseline-demo.mp4" type="video/mp4" />
+        </video>
     </div>
-    <p>
-        Qualitative results generated by VectorMapNet and baselines. We use camera images as inputs for comparisons. The areas enclosed by <font COLOR="#FF0000">red</font> and <font COLOR="#0000FF">blue</font> ellipses show that VectorMapNet can preserve sharp corners, and polyline representations prevent VectorMapNet from generating ambiguous self-looping results.
+    <p style="padding-top: 10px; padding-bottom: 20px;">
+        We compare the baseline model from openlane-v2 with and without our method, SMERF applied. Observe that adding the SD map as a prior improves far away lane recognition, since such information is present in the map but not in the images. The areas marked by <font COLOR="#FF0000">red</font> arrows show that adding SMERF improves lane-topology performance.
     </p>
+
     <div class="logo" style="" align="center">
-        <img style="width: 700pt;" src="images/qualitative_example.png">
+        <video id="v0" width="100%" autoplay loop muted
+            style="display: block; margin: 0 auto;">
+            <source src="images/toponet-demo.mp4" type="video/mp4" />
+        </video>
     </div>
-    <p>
-        An example of VectorMapNet detecting unlabeled map elements. The <font COLOR="#FF0000">red ellipse</font> indicates a pedestrian crossing that is missing in ground truth annotations, while VectorMapNet detects it correctly. All the predictions are generated from camera images.
+    <p style="padding-top: 20px;">
+        This effect is observed across models; we visualize the comparison between Toponet with and without SMERF.
     </p>
-</div> -->
+</div>
 
 
+<!-- === Editing ends here === -->
 
 <!-- <div class="section">
     <div class="title" id="lang">Related Projects on <a href="https://vcad-ai.github.io/">VCAD (Vision-Centric Autonomous Driving)</a></div>
@@ -206,12 +216,12 @@
     </div>
 <p>If this work is helpful for your research, please consider citing us!</p>
 <pre>
-    @article{luo2023augmenting,
-        title={Augmenting Lane Perception and Topology Understanding with Standard Definition Navigation Maps},
-        author={Luo, Katie Z and Weng, Xinshuo and Wang, Yan and Wu, Shuang and Li, Jie and Weinberger, Kilian Q and Wang, Yue and Pavone, Marco},
-        journal={arXiv preprint arXiv:2311.04079},
-        year={2023}
-    }
+@article{luo2023augmenting,
+    title={Augmenting Lane Perception and Topology Understanding with Standard Definition Navigation Maps},
+    author={Luo, Katie Z and Weng, Xinshuo and Wang, Yan and Wu, Shuang and Li, Jie and Weinberger, Kilian Q and Wang, Yue and Pavone, Marco},
+    journal={arXiv preprint arXiv:2311.04079},
+    year={2023}
+}
 </pre>
     <!-- Adjust the frame size based on the demo (Every project differs). -->
 </div>
